@@ -11,7 +11,7 @@ describe 'elasticsearch::default' do
     let(:chef_run) do
       # for a complete list of available platforms and versions see:
       # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
-      runner = ChefSpec::Solo.new(platform: 'ubuntu', version: '16.04')
+      runner = ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04')
       runner.converge(described_recipe)
     end
 
@@ -24,11 +24,11 @@ describe 'elasticsearch::default' do
     end
 
     it 'should install java' do
-      expect(chef_run).to upgrade_package "default-jre"
+      expect(chef_run).to install_package "default-jre"
     end
 
     it 'should install elasticsearch' do
-      expect(chef_run).to upgrade_package "elasticsearch"
+      expect(chef_run).to install_package "elasticsearch"
     end
 
     it "should delete /etc/elasticsearch/elasticsearch.yml" do
@@ -54,6 +54,6 @@ describe 'elasticsearch::default' do
     it 'should start the elasticsearch service' do
       expect(chef_run).to start_service "elasticsearch"
     end
-    
+
   end
 end

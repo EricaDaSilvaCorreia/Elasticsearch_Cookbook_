@@ -8,16 +8,16 @@ apt_update 'update_sources' do
 end
 
 package 'default-jre'
-package 'elasticsearch'
-package 'curl'
 
-# apt_repository 'mongodb-org' do
-#   uri "http://repo.mongodb.org/apt/ubuntu"
-#   distribution "xenial/mongodb-org/3.2"
-#   components ['multiverse']
-#   keyserver "hkp://keyserver.ubuntu.com:80"
-#   key "EA312927"
-# end
+execute "install elasticsearch" do
+  command "wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -"
+end
+
+execute "get key" do
+  command 'echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list'
+end
+
+package 'elasticsearch'
 
 package 'elasticsearch' do
   action :upgrade
@@ -28,12 +28,15 @@ service 'elasticsearch' do
   action [:enable, :start]
 end
 
-link '/etc/elasticsearch/elasticsearch.yml' do
-  action :delete
+execute "modify permissions" do
+  command "sudo chmod 777 /etc/elasticsearch"
+end
+execute "move elasticsearch.yml file" do
+  command "sudo mv /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml.old"
 end
 
-link '/etc/elasticsearch/jvm.options' do
-  action :delete
+execute "move jvm.options file" do
+  command "sudo mv /etc/elasticsearch/jvm.options /etc/elasticsearch/jvm.options.old"
 end
 
 template '/etc/elasticsearch/elasticsearch.yml' do
@@ -45,3 +48,19 @@ template '/etc/elasticsearch/jvm.options' do
   source 'jvm.options.erb'
   notifies :restart, 'service[elasticsearch]'
 end
+
+# link '/etc/elasticsearch/elasticsearch.yml' do
+#   to '/etc/elasticsearch/elasticsearch.yml'
+# end
+#
+# link '/etc/elasticsearch/jvm.options' do
+#   to '/etc/elasticsearch/jvm.options'
+# end
+#
+# link '/etc/elasticsearch/elasticsearch.yml' do
+#   action :delete
+# end
+#
+# link '/etc/elasticsearch/jvm.options' do
+#   action :delete
+# end
