@@ -31,14 +31,6 @@ describe 'elasticsearch::default' do
       expect(chef_run).to install_package "elasticsearch"
     end
 
-    it "should delete /etc/elasticsearch/elasticsearch.yml" do
-     expect(chef_run).to delete_link('/etc/elasticsearch/elasticsearch.yml')
-   end
-
-    it "should delete /etc/elasticsearch/jvm.options" do
-     expect(chef_run).to delete_link('/etc/elasticsearch/jvm.options')
-   end
-
    it "should create file elasticsearch.yml in /etc/elasticsearch/" do
       expect(chef_run).to create_template('/etc/elasticsearch/elasticsearch.yml')
     end

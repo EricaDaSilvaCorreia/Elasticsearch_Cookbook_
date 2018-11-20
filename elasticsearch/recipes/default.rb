@@ -32,18 +32,6 @@ service 'elasticsearch' do
   action [:enable, :start]
 end
 
-# execute "modify permissions" do
-#   command "sudo chmod 777 /etc/elasticsearch"
-# end
-# execute "move elasticsearch.yml file" do
-#   command "sudo mv /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml.old"
-# end
-#
-# execute "move jvm.options file" do
-#   command "sudo mv /etc/elasticsearch/jvm.options /etc/elasticsearch/jvm.options.old"
-# end
-
-
 template '/etc/elasticsearch/elasticsearch.yml' do
   source 'elasticsearch.yml.erb'
   notifies :restart, 'service[elasticsearch]'
@@ -53,22 +41,6 @@ template '/etc/elasticsearch/jvm.options' do
   source 'jvm.options.erb'
   notifies :restart, 'service[elasticsearch]'
 end
-
-# link '/etc/elasticsearch/elasticsearch.yml' do
-#   action :delete
-# end
-#
-# link '/etc/elasticsearch/jvm.options' do
-#   action :delete
-# end
-#
-# link '/etc/elasticsearch/elasticsearch.yml' do
-#   to '/home/vagrant/elasticsearch.yml'
-# end
-#
-# link '/etc/elasticsearch/jvm.options' do
-#   to '/home/vagrant/jvm.options'
-# end
 
 execute "start elasticsearch" do
   command "sudo service elasticsearch start"
