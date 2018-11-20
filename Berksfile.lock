@@ -1,0 +1,7 @@
+DEPENDENCIES
+  elasticsearch
+    path: .
+    metadata: true
+
+GRAPH
+  elasticsearch (0.1.0)
